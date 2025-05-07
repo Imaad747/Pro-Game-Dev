@@ -4,13 +4,14 @@ screen=pygame.display.set_mode((1200,800))
 pygame.display.set_caption("Bouncing Bomb")
 #image=pygame.draw.circle(surface=screen,color="Red",center=[100,100],radius=60)
 image=pygame.transform.scale(pygame.image.load("boingball.png"),(160,160))
+battle_2006roblox_sky=pygame.transform.scale(pygame.image.load("battle_sky.png"),(1200,800))
 the_invisible_force=pygame.Rect(0,0,80,80)
-speed=[1.5,1.5]
+speed=[10,10]
 while True:
     for event in pygame.event.get():
         if event.type==pygame.QUIT:
             exit()
-    screen.fill("Black")
+    screen.blit(battle_2006roblox_sky,(0,0))
     screen.blit(image,(the_invisible_force.x,the_invisible_force.y))
     the_invisible_force=the_invisible_force.move(speed)
     if the_invisible_force.left<0 or the_invisible_force.right>1200:
