@@ -7,6 +7,16 @@ class KeyholeAndCORONA(pygame.sprite.Sprite):
         super().__init__()
         self.image=pygame.image.load("saturn_v.png")
         self.rect=self.image.get_rect()
+    def update(self, pressed_keys):
+        if pressed_keys[pygame.K_UP]:
+            self.rect.move_ip(0, -5)
+        if pressed_keys[pygame.K_DOWN]:
+            self.rect.move_ip(0, 5)
+        if pressed_keys[pygame.K_RIGHT]:
+            self.rect.move_ip(5, 0)
+        if pressed_keys[pygame.K_LEFT]:
+            self.rect.move_ip(-5, 0)
+    
 sprites=pygame.sprite.Group()
 rocket=KeyholeAndCORONA()
 sprites.add(rocket)
@@ -14,6 +24,8 @@ while True:
     for event in pygame.event.get():
         if event.type==pygame.QUIT:
             exit()
-    screen.blit(pygame.image.load("starswow.png"),(0,0))
+    screen.blit(pygame.image.load("starswow.png"),(100,100))
     sprites.draw(screen)
+    oppressed_keys=pygame.key.get_pressed()
+    rocket.update(oppressed_keys)
     pygame.display.update()
