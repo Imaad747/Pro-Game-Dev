@@ -5,6 +5,8 @@ the_health_of_the_trench=100
 the_health_of_the_burp=100
 trench_ammunition=[]
 burp_ammunition=[]
+game_over=False
+winner=""
 pygame.display.set_caption("The Trench Colonial Empire vs The BURP Democratic Republic - Great Brutal War")
 the_trench_yellow_class_spaceship=pygame.transform.rotate(pygame.transform.scale(pygame.image.load("yellowspaceship.png"),(50,50)),90)
 the_burp_red_spaceship=pygame.transform.rotate(pygame.transform.scale(pygame.image.load("redspaceship.png"),(50,50)),270)
@@ -26,7 +28,13 @@ def draw():
     for i in trench_ammunition:
         pygame.draw.rect(screen,"Yellow",i)
     for i in burp_ammunition:
-        pygame.draw.rect(screen,"Dark Green",i)
+        pygame.draw.rect(screen,"Red",i)
+    if game_over==True:
+        global i_drink_fonta,fonta
+        screen.fill("Red")
+        i_drink_fonta=pygame.font.SysFont("Arial",100)
+        fonta=font.render(f"The winner of the dogfight was {winner}.",True,"White")
+        screen.blit(fonta,(100,250))
 def movement_ye(keys_pressed):
     if keys_pressed[pygame.K_a] and yellow_rect.x > -10:
         yellow_rect.x -= 1
@@ -52,16 +60,23 @@ def bullet_move(trench_ammunition,burp_ammunition):
         if red_rect.colliderect(i):
             the_health_of_the_burp-=10
             trench_ammunition.remove(i)
-        elif i.x>900:
+        elif i.x>1000:
             trench_ammunition.remove(i)
     for i in burp_ammunition:
         i.x-=5
         if yellow_rect.colliderect(i):
             the_health_of_the_trench-=10
             burp_ammunition.remove(i)
-        elif i.x>0:
+        elif i.x<0:
             burp_ammunition.remove(i)
-    
+def itsdone():
+    global game_over,winner
+    if the_health_of_the_trench==0:
+        game_over=True
+        winner="the BURP"
+    if the_health_of_the_burp==0:
+        game_over=True
+        winner="the Trench/TCE"
 
 
 while True:
@@ -80,6 +95,7 @@ while True:
     keys_pressed = pygame.key.get_pressed()
     movement_ye(keys_pressed)
     movement_hoozah(keys_pressed)
-    bullet_move(burp_ammunition,trench_ammunition)
+    bullet_move(trench_ammunition,burp_ammunition)
+    itsdone()
     pygame.display.update()
     
