@@ -46,6 +46,7 @@ def movement_hoozah(keys_pressed):
     if keys_pressed[pygame.K_DOWN] and red_rect.y < 900:
         red_rect.y += 1
 def bullet_move(trench_ammunition,burp_ammunition):
+    global the_health_of_the_burp,the_health_of_the_trench
     for i in trench_ammunition:
         i.x+=5
         if red_rect.colliderect(i):
@@ -53,6 +54,13 @@ def bullet_move(trench_ammunition,burp_ammunition):
             trench_ammunition.remove(i)
         elif i.x>900:
             trench_ammunition.remove(i)
+    for i in burp_ammunition:
+        i.x-=5
+        if yellow_rect.colliderect(i):
+            the_health_of_the_trench-=10
+            burp_ammunition.remove(i)
+        elif i.x>0:
+            burp_ammunition.remove(i)
     
 
 
@@ -62,15 +70,16 @@ while True:
             exit()
         if event.type==pygame.KEYDOWN:
             if event.key == pygame.K_t:
-                t_bullet=pygame.Rect(yellow_rect.rect.x,yellow_rect.rect.y + 20, 10,10)
+                t_bullet=pygame.Rect(yellow_rect.x,yellow_rect.y + 20,10,10)
                 trench_ammunition.append(t_bullet)
             if event.key == pygame.K_b:
-                b_bullet=pygame.rect(red_rect.rect.x,red_rect.rect.y + 20,10,10)
+                b_bullet=pygame.Rect(red_rect.x,red_rect.y + 20,10,10)
                 burp_ammunition.append(b_bullet)
 
     draw()
     keys_pressed = pygame.key.get_pressed()
     movement_ye(keys_pressed)
     movement_hoozah(keys_pressed)
+    bullet_move(burp_ammunition,trench_ammunition)
     pygame.display.update()
     
