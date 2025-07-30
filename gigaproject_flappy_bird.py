@@ -11,6 +11,9 @@ game_over=False
 time_between_pipes_moving=1500
 pipe_gap=150
 last_pipe_generated=pygame.time.get_ticks()-time_between_pipes_moving
+pipe_passed=False
+score=0
+font=pygame.font.SysFont("Arial",50)
 clock=pygame.time.Clock()
 
 class birb(pygame.sprite.Sprite):
@@ -67,18 +70,65 @@ class Pipe(pygame.sprite.Sprite):
             self.rect.topleft=[x,y+75]
     def update(self):
         self.rect.x-=10
-        if self.rect.x<0:
+        if self.rect.right<0:
             self.kill()
 
 sewage_system=pygame.sprite.Group()
 
+class Button(pygame.sprite.Sprite):
+    def __init__ (self,x,y):
+        pygame.sprite.Sprite.__init__(self)
+        self.image=pygame.image.load("C:\\Users\\imaad\\OneDrive\\Desktop\\Pro Game Dev\\flappy bird images\\restart-button.png")
+        self.rect=self.image.get_rect()
+        self.rect.topleft=(x,y)
+    def draw(self):
+        action=False
+        pos=pygame.mouse.get_pos()
+        if self.rect.collidepoint(pos):
+            if pygame.mouse.get_pressed()[0]:
+                action=True
+        screen.blit(self.image,(self.rect.x,self.rect.y))
+        return action
+buttaton=Button(432,450)
+
+    
+
 while True:
-    clock.tick(60)
+    clock.tick(100000000)
     screen.blit(city,(0,0))
     sewage_system.draw(screen)
     screen.blit(les_grass,(ground_scroll,732))
     birb_goop.draw(screen)
     birb_goop.update()
+
+    if len(sewage_system)>0:
+        if birb_goop.sprites()[0].rect.left>sewage_system.sprites()[0].rect.left\
+            and birb_goop.sprites()[0].rect.right<sewage_system.sprites()[0].rect.right\
+            and pipe_passed==False:
+            pipe_passed=True
+        if pipe_passed==True:
+            if birb_goop.sprites()[0].rect.left>sewage_system.sprites()[0].rect.right:
+                score+=1
+                pipe_passed=False
+    numnum=font.render(f"Score: {score}",True,"White")
+    screen.blit(numnum,(432,50))
+    if pygame.sprite.groupcollide(birb_goop,sewage_system,False,False):
+        game_over=True
+    if game_over==True:
+        if buttaton.draw():
+            game_over=False
+            borb.rect.x=50
+            borb.rect.y=350
+            score=0
+            sewage_system.empty()
+    
+            
+                
+
+            
+            
+
+
 
     
     if flying_checks==True and game_over==False:
